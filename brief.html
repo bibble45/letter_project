@@ -16,14 +16,14 @@
             width: 100%;
             height: 100%;
             overflow: hidden;
-            z-index: -1; /* hinter dem Brief */
+            z-index: -1;
             pointer-events: none;
         }
 
         .floating-pingu {
             position: absolute;
             bottom: -50px;
-            width: 40px; /* Startgröße, wird zufällig überschrieben */
+            width: 40px;
             height: 40px;
             background-image: url('pingu.png');
             background-size: contain;
@@ -42,6 +42,11 @@
                 opacity: 0;
             }
         }
+
+        /* Schriftänderung */
+        .card .text {
+            font-family: "Georgia", serif; /* <<< Neue Schrift */
+        }
     </style>
 </head>
 
@@ -57,8 +62,8 @@
                         Manchmal bin ich zickig, sorry, das ist wohl wahr,<br>
                         doch du machst mich glücklich, jeden Tag sogar.<br>
                         Dein Fußfetisch? Kein Ding, ich bin dabei,<br>
-                        nur du bist der Mann, dem ich eine Prostata-Massage geben will,<br>
-                        mein pookie schmookie, bye bye.<br>
+                        nur du bist der Mann, dem ich eine Prostata-Massage geben will.<br>
+                        Aiaiai (hier ist mir kein Reim mehr eingefallen)<br>
                     </div>
                     <div class="heart"></div>
                 </div>
@@ -68,45 +73,43 @@
     </div>
 
     <script>
-        // Funktion, um neue Pingu-Bilder zu erzeugen
+        // ► Pingu-Effekt
         function spawnPingu() {
             const container = document.getElementById("floating-background");
+
             const pingu = document.createElement("div");
             pingu.classList.add("floating-pingu");
 
-            // zufällige Position
+            // Position links/rechts
             pingu.style.left = Math.random() * 100 + "vw";
 
-            // größere zufällige Größe
-            const size = 40 + Math.random() * 30; // 40px bis 70px
+            // Größe
+            const size = 40 + Math.random() * 30;
             pingu.style.width = size + "px";
             pingu.style.height = size + "px";
 
-            // Drift nach links/rechts
+            // Drift
             pingu.style.setProperty("--drift", (Math.random() * 60 - 30) + "px");
 
             // Rotation
             pingu.style.setProperty("--rotate", (Math.random() * 360) + "deg");
 
-            // zufällige Dauer
+            // Dauer
             const duration = 6 + Math.random() * 6;
             pingu.style.animationDuration = duration + "s";
 
             container.appendChild(pingu);
 
-            // entfernen nach Animation
             setTimeout(() => pingu.remove(), duration * 1000);
         }
 
-        // alle 500ms ein neues Pingu
         setInterval(spawnPingu, 500);
+
+        // ► Umschlag per Klick öffnen
+        const val = document.querySelector(".valentines");
+        val.addEventListener("click", () => {
+            val.classList.toggle("open");
+        });
     </script>
-    
-<script>
-    document.querySelector(".valentines").addEventListener("click", function() {
-        this.classList.toggle("open");
-    });
-</script>
-    
 </body>
 </html>
