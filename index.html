@@ -181,7 +181,7 @@
     <div id="floating-background"></div>
 
     <div class="wrapper">
-        <h2>Gib den Code ein ❤️</h2>
+        <h2>Gib den richtigen Code ein ❤️</h2>
 
         <!-- Die 4 Kreise -->
         <div class="code-dots" id="dots">
@@ -241,7 +241,7 @@
         heart.style.left = "50%";
         heart.style.top = "50%";
         heart.style.transform = "translate(-50%, -50%)";
-        heart.textContent = "❤️";
+        heart.textContent = "😍";
         document.body.appendChild(heart);
         setTimeout(() => heart.remove(), 800);
     }
@@ -257,7 +257,7 @@
             setTimeout(() => { document.body.classList.add("fade-out"); }, 300);
             setTimeout(() => { window.location.href = "brief.html"; }, 1100);
         } else {
-            status.textContent = "Falsch, versuch's nochmal ❤️";
+            status.textContent = "Falsch, versuch's nochmal :( ";
             status.style.color = "red";
             document.getElementById("dots").classList.add("shake");
             setTimeout(() => { document.getElementById("dots").classList.remove("shake"); }, 400);
