@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Geheimer Code</title>
+
+    <style>
+        body {
+            background: #d9f5f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+            user-select: none;
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        /* Fade-Out für Übergang */
+        body.fade-out {
+            opacity: 0;
+            transform: scale(0.97);
+        }
+
+        .wrapper {
+            text-align: center;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            color: #003049;
+        }
+
+        /* Die 4 Kreise */
+        .code-dots {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 25px;
+            transition: filter 0.3s;
+        }
+
+        .dot {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 2px solid #003049;
+            background: transparent;
+            transition: 0.2s;
+        }
+
+        .filled {
+            background: #e75480;
+        }
+
+        /* Keypad */
+        .keypad {
+            display: grid;
+            grid-template-columns: repeat(3, 70px);
+            gap: 12px;
+            justify-content: center;
+            transition: filter 0.3s;
+        }
+
+        .key {
+            padding: 18px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            cursor: pointer;
+            font-size: 20px;
+            transition: 0.2s;
+        }
+
+        .key:active {
+            transform: scale(0.95);
+        }
+
+        /* Shake-Animation */
+        @keyframes shake {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(-6px); }
+            50% { transform: translateX(6px); }
+            75% { transform: translateX(-6px); }
+            100% { transform: translateX(0); }
+        }
+
+        .shake {
+            animation: shake 0.4s;
+        }
+
+        #status {
+            margin-top: 15px;
+            font-size: 16px;
+            height: 24px;
+        }
+
+        /* Herz-Pop Effekt */
+        .heart-pop {
+            position: fixed;
+            font-size: 30px;
+            animation: pop 0.8s ease forwards;
+            pointer-events: none;
+        }
+
+        @keyframes pop {
+            0% { transform: scale(0.5); opacity: 1; }
+            70% { transform: scale(1.3); opacity: 1; }
+            100% { transform: scale(1); opacity: 0; }
+        }
+
+        /* Glow bei Erfolg */
+        .success-glow {
+            filter: drop-shadow(0 0 10px #e75480);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="wrapper">
+        <h2>Gib den Code ein ❤️</h2>
+
+        <!-- Die 4 Kreise -->
+        <div class="code-dots" id="dots">
+            <div class="dot" id="dot1"></div>
+            <div class="dot" id="dot2"></div>
+            <div class="dot" id="dot3"></div>
+            <div class="dot" id="dot4"></div>
+        </div>
+
+        <!-- Keypad -->
+        <div class="keypad" id="keypad">
+            <div class="key" onclick="press(1)">1</div>
+            <div class="key" onclick="press(2)">2</div>
+            <div class="key" onclick="press(3)">3</div>
+            <div class="key" onclick="press(4)">4</div>
+            <div class="key" onclick="press(5)">5</div>
+            <div class="key" onclick="press(6)">6</div>
+            <div class="key" onclick="press(7)">7</div>
+            <div class="key" onclick="press(8)">8</div>
+            <div class="key" onclick="press(9)">9</div>
+            <div class="key"></div>
+            <div class="key" onclick="press(0)">0</div>
+            <div class="key" onclick="backspace()">⌫</div>
+        </div>
+
+        <div id="status"></div>
+    </div>
+
+
+<script>
+    const correctCode = "1110";
+    let input = "";
+
+    function press(num) {
+        if (input.length >= 4) return;
+
+        input += num;
+        updateDots();
+
+        if (input.length === 4) {
+            checkCode();
+        }
+    }
+
+    function updateDots() {
+        for (let i = 1; i <= 4; i++) {
+            document.getElementById("dot" + i).classList.remove("filled");
+        }
+
+        for (let i = 1; i <= input.length; i++) {
+            document.getElementById("dot" + i).classList.add("filled");
+        }
+    }
+
+    function backspace() {
+        input = input.slice(0, -1);
+        updateDots();
+    }
+
+    function popHeart() {
+        const heart = document.createElement("div");
+        heart.classList.add("heart-pop");
+        heart.style.left = "50%";
+        heart.style.top = "50%";
+        heart.style.transform = "translate(-50%, -50%)";
+        heart.textContent = "❤️";
+        document.body.appendChild(heart);
+
+        setTimeout(() => heart.remove(), 800);
+    }
+
+    function checkCode() {
+        const status = document.getElementById("status");
+
+        if (input === correctCode) {
+            status.textContent = "Richtig! 💖";
+            status.style.color = "green";
+
+            popHeart();
+
+            document.getElementById("dots").classList.add("success-glow");
+            document.getElementById("keypad").classList.add("success-glow");
+
+            setTimeout(() => {
+                document.body.classList.add("fade-out");
+            }, 300);
+
+            setTimeout(() => {
+                window.location.href = "index.html";
+            }, 1100);
+
+        } else {
+            status.textContent = "Falsch, versuch's nochmal ❤️";
+            status.style.color = "red";
+
+            document.getElementById("dots").classList.add("shake");
+
+            setTimeout(() => {
+                document.getElementById("dots").classList.remove("shake");
+            }, 400);
+
+            input = "";
+            updateDots();
+        }
+    }
+</script>
+
+</body>
+</html>
