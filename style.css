@@ -81,8 +81,8 @@ body{
     border-style: dashed;
 }
 
-.valentines:hover .card{
-    transform: translateY(-120px); /* leicht angepasst, da die Karte größer ist */
+.valentines:open .card{
+    transform: translateY(-120px); 
 }
 
 .card .text{
