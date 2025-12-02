@@ -81,7 +81,7 @@ body{
     border-style: dashed;
 }
 
-.valentines:open .card{
+.valentines.open .card{
     transform: translateY(-120px); 
 }
 
