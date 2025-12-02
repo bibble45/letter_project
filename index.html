@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -114,10 +115,70 @@
         .success-glow {
             filter: drop-shadow(0 0 10px #e75480);
         }
+
+        /* --- Hintergrund Sterne & Herzen --- */
+        #floating-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .floating-star, .floating-heart {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            opacity: 0.8;
+            animation: floatUp linear forwards;
+        }
+
+        .floating-star {
+            background: #fff;
+            border-radius: 50%;
+        }
+
+        .floating-heart {
+            width: 12px;
+            height: 12px;
+            background: red;
+            transform: rotate(45deg);
+            border-radius: 50% 0 0 50%;
+        }
+
+        .floating-heart::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: red;
+            border-radius: 0 50% 50% 0;
+            right: 0;
+            transform: rotate(-90deg);
+            transform-origin: top;
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(0) translateX(0) rotate(0deg);
+                opacity: 0.9;
+            }
+            100% {
+                transform: translateY(-120vh) translateX(var(--drift)) rotate(var(--rotate));
+                opacity: 0;
+            }
+        }
+
     </style>
 </head>
 
 <body>
+
+    <!-- Hintergrund Sterne & Herzen -->
+    <div id="floating-background"></div>
 
     <div class="wrapper">
         <h2>Gib den Code ein ❤️</h2>
@@ -149,27 +210,21 @@
         <div id="status"></div>
     </div>
 
-
 <script>
     const correctCode = "1110";
     let input = "";
 
     function press(num) {
         if (input.length >= 4) return;
-
         input += num;
         updateDots();
-
-        if (input.length === 4) {
-            checkCode();
-        }
+        if (input.length === 4) checkCode();
     }
 
     function updateDots() {
         for (let i = 1; i <= 4; i++) {
             document.getElementById("dot" + i).classList.remove("filled");
         }
-
         for (let i = 1; i <= input.length; i++) {
             document.getElementById("dot" + i).classList.add("filled");
         }
@@ -188,44 +243,55 @@
         heart.style.transform = "translate(-50%, -50%)";
         heart.textContent = "❤️";
         document.body.appendChild(heart);
-
         setTimeout(() => heart.remove(), 800);
     }
 
     function checkCode() {
         const status = document.getElementById("status");
-
         if (input === correctCode) {
             status.textContent = "Richtig! 💖";
             status.style.color = "green";
-
             popHeart();
-
             document.getElementById("dots").classList.add("success-glow");
             document.getElementById("keypad").classList.add("success-glow");
-
-            setTimeout(() => {
-                document.body.classList.add("fade-out");
-            }, 300);
-
-            setTimeout(() => {
-                window.location.href = "brief.html";
-            }, 1100);
-
+            setTimeout(() => { document.body.classList.add("fade-out"); }, 300);
+            setTimeout(() => { window.location.href = "brief.html"; }, 1100);
         } else {
             status.textContent = "Falsch, versuch's nochmal ❤️";
             status.style.color = "red";
-
             document.getElementById("dots").classList.add("shake");
-
-            setTimeout(() => {
-                document.getElementById("dots").classList.remove("shake");
-            }, 400);
-
+            setTimeout(() => { document.getElementById("dots").classList.remove("shake"); }, 400);
             input = "";
             updateDots();
         }
     }
+
+    // --- Hintergrund Sterne & Herzen ---
+    function spawnElement(type) {
+        const container = document.getElementById("floating-background");
+        const el = document.createElement("div");
+        el.classList.add(type);
+
+        el.style.left = Math.random() * 100 + "vw";
+        const size = 6 + Math.random() * 12;
+        el.style.width = size + "px";
+        el.style.height = size + "px";
+
+        el.style.setProperty("--drift", (Math.random() * 60 - 30) + "px");
+        el.style.setProperty("--rotate", (Math.random() * 360) + "deg");
+
+        const duration = 4 + Math.random() * 6;
+        el.style.animationDuration = duration + "s";
+
+        container.appendChild(el);
+        setTimeout(() => el.remove(), duration * 1000);
+    }
+
+    setInterval(() => {
+        const type = Math.random() > 0.7 ? "floating-heart" : "floating-star";
+        spawnElement(type);
+    }, 300);
+
 </script>
 
 </body>
