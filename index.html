@@ -1,91 +1,105 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Geheimer Code</title>
-<link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liebesbrief</title>
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        /* --- Floating Pingu Hintergrund --- */
+        #floating-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: -1; /* hinter dem Brief */
+            pointer-events: none;
+        }
+
+        .floating-pingu {
+            position: absolute;
+            bottom: -50px;
+            width: 40px; /* Startgröße, wird zufällig überschrieben */
+            height: 40px;
+            background-image: url('pingu.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            opacity: 0.8;
+            animation: floatUp linear forwards;
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(0) translateX(0) rotate(0deg);
+                opacity: 0.9;
+            }
+            100% {
+                transform: translateY(-120vh) translateX(var(--drift)) rotate(var(--rotate));
+                opacity: 0;
+            }
+        }
+    </style>
 </head>
+
 <body>
-<div class="wrapper">
-    <h2>Gib den Code ein ❤️</h2>
+    <!-- Hintergrund -->
+    <div id="floating-background"></div>
 
-    <div class="code-dots" id="dots">
-        <div class="dot" id="dot1"></div>
-        <div class="dot" id="dot2"></div>
-        <div class="dot" id="dot3"></div>
-        <div class="dot" id="dot4"></div>
+    <div class="container">
+        <div class="valentines">
+            <div class="envelope">
+                <div class="card">
+                    <div class="text">
+                        Manchmal bin ich zickig, sorry, das ist wohl wahr,<br>
+                        doch du machst mich glücklich, jeden Tag sogar.<br>
+                        Dein Fußfetisch? Kein Ding, ich bin dabei,<br>
+                        nur du bist der Mann, dem ich eine Prostata-Massage geben will.<br>
+                        Aiaiai (hier ist mir kein Reim mehr eingefallen)<br>
+                    </div>
+                    <div class="heart"></div>
+                </div>
+            </div>
+            <div class="front"></div>
+        </div>
     </div>
 
-    <div class="keypad">
-        <div class="key" onclick="press(1)">1</div>
-        <div class="key" onclick="press(2)">2</div>
-        <div class="key" onclick="press(3)">3</div>
-        <div class="key" onclick="press(4)">4</div>
-        <div class="key" onclick="press(5)">5</div>
-        <div class="key" onclick="press(6)">6</div>
-        <div class="key" onclick="press(7)">7</div>
-        <div class="key" onclick="press(8)">8</div>
-        <div class="key" onclick="press(9)">9</div>
-        <div class="key"></div>
-        <div class="key" onclick="press(0)">0</div>
-        <div class="key" onclick="backspace()">⌫</div>
-    </div>
+    <script>
+        // Funktion, um neue Pingu-Bilder zu erzeugen
+        function spawnPingu() {
+            const container = document.getElementById("floating-background");
+            const pingu = document.createElement("div");
+            pingu.classList.add("floating-pingu");
 
-    <div id="status"></div>
-</div>
+            // zufällige Position
+            pingu.style.left = Math.random() * 100 + "vw";
 
-<!-- Hintergrund-Animation -->
-<div class="hearts-stars-container"></div>
+            // größere zufällige Größe
+            const size = 40 + Math.random() * 30; // 40px bis 70px
+            pingu.style.width = size + "px";
+            pingu.style.height = size + "px";
 
-<script>
-const correctCode = "1110";
-let input = "";
+            // Drift nach links/rechts
+            pingu.style.setProperty("--drift", (Math.random() * 60 - 30) + "px");
 
-function press(num) {
-    if (input.length >= 4) return;
-    input += num;
-    updateDots();
-    if (input.length === 4) checkCode();
-}
+            // Rotation
+            pingu.style.setProperty("--rotate", (Math.random() * 360) + "deg");
 
-function updateDots() {
-    for (let i = 1; i <= 4; i++) document.getElementById("dot" + i).classList.remove("filled");
-    for (let i = 1; i <= input.length; i++) document.getElementById("dot" + i).classList.add("filled");
-}
+            // zufällige Dauer
+            const duration = 6 + Math.random() * 6;
+            pingu.style.animationDuration = duration + "s";
 
-function backspace() {
-    input = input.slice(0,-1);
-    updateDots();
-}
+            container.appendChild(pingu);
 
-function checkCode() {
-    const status = document.getElementById("status");
-    if (input === correctCode) {
-        status.textContent = "Richtig! 💖";
-        status.style.color = "green";
-        setTimeout(() => { window.location.href = "brief.html"; }, 800);
-    } else {
-        status.textContent = "Falsch, versuch's nochmal ❤️";
-        status.style.color = "red";
-        document.getElementById("dots").classList.add("shake");
-        setTimeout(() => document.getElementById("dots").classList.remove("shake"), 400);
-        input = "";
-        updateDots();
-    }
-}
+            // entfernen nach Animation
+            setTimeout(() => pingu.remove(), duration * 1000);
+        }
 
-// Herz- & Sternchen-Animation
-const container = document.querySelector(".hearts-stars-container");
-function createParticle() {
-    const particle = document.createElement("div");
-    particle.classList.add("particle");
-    particle.style.left = Math.random()*100+"%";
-    particle.style.animationDuration = 3 + Math.random()*3 + "s";
-    container.appendChild(particle);
-    setTimeout(()=>particle.remove(),6000);
-}
-setInterval(createParticle,200);
-</script>
+        // alle 500ms ein neues Pingu
+        setInterval(spawnPingu, 500);
+    </script>
 </body>
 </html>
